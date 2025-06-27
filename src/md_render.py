@@ -1,4 +1,4 @@
-from .extractors import extract_measures_and_tables_dax
+from .extractors import (extract_measures_and_tables_dax, extract_sql_from_m_expression)
 from .utils import normalize_name
 import re
 
@@ -138,7 +138,7 @@ def render_tabela_md(table, nomeprojeto, measures_using_table_map=None):
             out.append("annotation PBI_ResultType = Table")
             out.append("```")
             # Extrai e exibe o SQL, se existir
-            sql = _extract_sql_from_m_expression(expr)
+            sql = extract_sql_from_m_expression(expr)
             if sql:
                 out.append("\n#### SQL extraído do PowerQuery\n```sql")
                 out.append(sql)

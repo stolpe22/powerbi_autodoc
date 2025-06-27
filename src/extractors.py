@@ -1,3 +1,5 @@
+import re
+
 def extract_all_table_names(tables):
     """Retorna um set com os nomes de todas as tabelas do modelo."""
     return {table.get("name", "") for table in tables if "name" in table}
@@ -65,3 +67,29 @@ def build_measures_using_table_map(tables, all_measures, all_tables, extract_fun
             for tab in tabelas_utilizadas:
                 table_to_measures.setdefault(tab, []).append(measure_name)
     return table_to_measures
+
+def extract_sql_from_m_expression(expr):
+    if isinstance(expr, list):
+        expr = "\n".join(expr)
+    expr = expr.replace('#(lf)', '\n')
+    # Parâmetros possíveis após a query
+    oracle_params = [
+        "CreateNavigationProperties",
+        "NavigationPropertyNameGenerator",
+        "Query",
+        "CommandTimeout",
+        "ConnectionTimeout",
+        "HierarchicalNavigation"
+    ]
+    params_pattern = "|".join(re.escape(p) for p in oracle_params if p != "Query")
+    # Regex para extrair Query="...SQL..." até , <param>=
+    # Aceita aspas simples ou duplas
+    pat = (
+        r'Query\s*=\s*["\']'
+        r'(.*?)'  # O SQL capturado
+        r'(?=,\s*(?:' + params_pattern + r')\s*=)'  # Olha adiante: , param=
+    )
+    m = re.search(pat, expr, re.DOTALL)
+    if m:
+        return m.group(1).strip()
+    return None
