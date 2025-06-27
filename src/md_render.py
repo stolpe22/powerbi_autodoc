@@ -65,6 +65,7 @@ def render_medida_md(
     out.append(f"- #{normalize_name(nomeprojeto).replace(".","_")}")
     return "\n".join(out)
 
+#Renderizador Tabela
 def render_tabela_md(table, nomeprojeto, measures_using_table_map=None):
     nome = table.get("name", "Tabela sem nome")
     out = []
@@ -85,9 +86,10 @@ def render_tabela_md(table, nomeprojeto, measures_using_table_map=None):
     out.append("")
     
     # Colunas
+    out.append("## Colunas\n")
     for column in table.get("columns", []):
         col_nome = column.get("name", "Coluna sem nome")
-        out.append(f"## {col_nome}\n")
+        out.append(f"### {col_nome}\n")
         out.append("```powerquery")
         for k, v in column.items():
             out.append(f"{k}: {v}")
@@ -97,7 +99,7 @@ def render_tabela_md(table, nomeprojeto, measures_using_table_map=None):
     # Partitions
     partitions = table.get("partitions", [])
     for partition in partitions:
-        out.append(f"## partition")
+        out.append(f"## Partição")
         out.append("```powerquery")
         out.append(f"partition '{partition.get('name','')}' = m")
         out.append(f"\tmode: {partition.get('mode','')}")
