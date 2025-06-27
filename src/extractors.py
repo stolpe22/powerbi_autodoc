@@ -69,10 +69,10 @@ def build_measures_using_table_map(tables, all_measures, all_tables, extract_fun
     return table_to_measures
 
 def extract_sql_from_m_expression(expr):
+    import re
     if isinstance(expr, list):
         expr = "\n".join(expr)
     expr = expr.replace('#(lf)', '\n')
-    # Parâmetros possíveis após a query
     oracle_params = [
         "CreateNavigationProperties",
         "NavigationPropertyNameGenerator",
@@ -82,12 +82,13 @@ def extract_sql_from_m_expression(expr):
         "HierarchicalNavigation"
     ]
     params_pattern = "|".join(re.escape(p) for p in oracle_params if p != "Query")
-    # Regex para extrair Query="...SQL..." até , <param>=
-    # Aceita aspas simples ou duplas
     pat = (
         r'Query\s*=\s*["\']'
-        r'(.*?)'  # O SQL capturado
-        r'(?=,\s*(?:' + params_pattern + r')\s*=)'  # Olha adiante: , param=
+        r'(.*?)'
+        r'(?:'
+            r'(?=,\s*(?:' + params_pattern + r')\s*=)'   # vírgula + parâmetro
+            r'|(?=["\']\s*\]\))'                        # aspa + ])
+        r')'
     )
     m = re.search(pat, expr, re.DOTALL)
     if m:
