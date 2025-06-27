@@ -79,12 +79,11 @@ def render_medida_md(
     else:
         out.append("- Nenhuma")
     out.append("---")
-    out.append(f"- #{nomeprojeto}")
+    out.append(f"- #{normalize_name(nomeprojeto).replace(".","_")}")
     return "\n".join(out)
 
 def render_tabela_md(table, nomeprojeto, measures_using_table_map=None):
     nome = table.get("name", "Tabela sem nome")
-    measures_ref = table.get("measuresReferencingThisTable", [])
     out = []
     out.append(f"# {nome}")
     out.append("")
@@ -120,8 +119,8 @@ def render_tabela_md(table, nomeprojeto, measures_using_table_map=None):
         out.append(f"partition '{partition.get('name','')}' = m")
         out.append(f"\tmode: {partition.get('mode','')}")
         source = partition.get("source", {})
+        expr = source.get("expression", "")
         if source.get("type") == "m":
-            expr = source.get("expression", [])
             if isinstance(expr, list):
                 expr = "\n".join(expr)
             out.append(f"\tsource =\n{expr}")
@@ -134,6 +133,12 @@ def render_tabela_md(table, nomeprojeto, measures_using_table_map=None):
                 out.append("\n#### SQL extraído do PowerQuery\n```sql")
                 out.append(sql)
                 out.append("```")
+        else:
+            # Para calculated, etc: apenas mostra a expressão e fecha bloco
+            out.append(f"\tsource =\n{expr}")
+            out.append("")
+            out.append("annotation PBI_ResultType = Table")
+            out.append("```")
         out.append("")
 
     # Annotations
@@ -146,5 +151,5 @@ def render_tabela_md(table, nomeprojeto, measures_using_table_map=None):
         out.append("```")
         out.append("")
 
-    out.append(f"---\n#{nomeprojeto}")
+    out.append(f"---\n#{normalize_name(nomeprojeto).replace(".","_")}")
     return "\n".join(out)
