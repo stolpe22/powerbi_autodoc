@@ -1,32 +1,5 @@
 from .extractors import (extract_measures_and_tables_dax, extract_sql_from_m_expression)
 from .utils import normalize_name
-import re
-
-def _extract_sql_from_m_expression(expr):
-    if isinstance(expr, list):
-        expr = "\n".join(expr)
-    expr = expr.replace('#(lf)', '\n')
-    # Parâmetros possíveis após a query
-    oracle_params = [
-        "CreateNavigationProperties",
-        "NavigationPropertyNameGenerator",
-        "Query",
-        "CommandTimeout",
-        "ConnectionTimeout",
-        "HierarchicalNavigation"
-    ]
-    params_pattern = "|".join(re.escape(p) for p in oracle_params if p != "Query")
-    # Regex para extrair Query="...SQL..." até , <param>=
-    # Aceita aspas simples ou duplas
-    pat = (
-        r'Query\s*=\s*["\']'
-        r'(.*?)'  # O SQL capturado
-        r'(?=,\s*(?:' + params_pattern + r')\s*=)'  # Olha adiante: , param=
-    )
-    m = re.search(pat, expr, re.DOTALL)
-    if m:
-        return m.group(1).strip()
-    return None
 
 def render_medida_md(
     measure, nomeprojeto, tabela_nome, all_measures, all_tables, measures_reverse_map=None
