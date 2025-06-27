@@ -2,7 +2,7 @@ import os
 import zipfile
 import json
 
-from .md_render import render_tabela_md, render_medida_md
+from .md_render import render_tabela_md, render_medida_md, render_rls_md
 from .extractors import (
     extract_all_table_names,
     extract_all_measure_names,
@@ -45,6 +45,7 @@ def _salvar_documentacao(data, nomeprojeto, autodoc_dir):
     os.makedirs(medidas_path, exist_ok=True)
 
     tables = data.get("model", {}).get("tables", [])
+    roles = data.get("model", {}).get("roles")
     all_tables = extract_all_table_names(tables)
     all_measures = extract_all_measure_names(tables)
     measures_reverse_map = build_measures_reverse_map(
@@ -73,3 +74,8 @@ def _salvar_documentacao(data, nomeprojeto, autodoc_dir):
             mname = normalize_name(measure.get("name", "medida_sem_nome"))
             with open(os.path.join(medidas_path, f"{mname}.md"), "w", encoding="utf-8") as fout:
                 fout.write(md)
+                
+    if roles:
+        rls_md = render_rls_md(roles, nomeprojeto)
+        with open(os.path.join(basepath, "RLS.md"), "w", encoding="utf-8") as fout:
+            fout.write(rls_md)
