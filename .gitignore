@@ -71,9 +71,9 @@ $RECYCLE.BIN/
 *.pbit
 
 # Project documentation output
-autodoc
+autodoc/
 !autodoc/.gitkeep
-projetos
+projetos/
 !projetos/.gitkeep
 
 # Local environment
