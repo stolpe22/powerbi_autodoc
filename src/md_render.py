@@ -3,19 +3,29 @@ from .utils import normalize_name
 import re
 
 def _extract_sql_from_m_expression(expr):
-    # Se for lista, junta em string
     if isinstance(expr, list):
         expr = "\n".join(expr)
-    # Substitui #(lf) por \n para facilitar leitura
     expr = expr.replace('#(lf)', '\n')
-    # Busca Query=" ... "]) (pega tudo entre Query=" e "])
-    m = re.search(r'Query="(.*?)"\s*\]\)', expr, re.DOTALL)
-    if not m:
-        # Tenta aspas simples se não achou aspas duplas
-        m = re.search(r"Query='(.*?)'\s*\]\)", expr, re.DOTALL)
+    # Parâmetros possíveis após a query
+    oracle_params = [
+        "CreateNavigationProperties",
+        "NavigationPropertyNameGenerator",
+        "Query",
+        "CommandTimeout",
+        "ConnectionTimeout",
+        "HierarchicalNavigation"
+    ]
+    params_pattern = "|".join(re.escape(p) for p in oracle_params if p != "Query")
+    # Regex para extrair Query="...SQL..." até , <param>=
+    # Aceita aspas simples ou duplas
+    pat = (
+        r'Query\s*=\s*["\']'
+        r'(.*?)'  # O SQL capturado
+        r'(?=,\s*(?:' + params_pattern + r')\s*=)'  # Olha adiante: , param=
+    )
+    m = re.search(pat, expr, re.DOTALL)
     if m:
-        sql = m.group(1)
-        return sql.strip()
+        return m.group(1).strip()
     return None
 
 def render_medida_md(
