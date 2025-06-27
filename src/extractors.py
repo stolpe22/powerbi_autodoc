@@ -92,5 +92,10 @@ def extract_sql_from_m_expression(expr):
     )
     m = re.search(pat, expr, re.DOTALL)
     if m:
-        return m.group(1).strip()
+        sql = m.group(1).strip()
+        # Limpeza extra:
+        sql = sql.replace('#(tab)', '    ')  # 4 espaços, ou use '\t' para tab real
+        # (Opcional) Remove espaços extras no início de cada linha
+        sql = '\n'.join(line.rstrip() for line in sql.splitlines())
+        return sql
     return None
