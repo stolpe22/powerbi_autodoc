@@ -1,5 +1,22 @@
 from .extractors import extract_measures_and_tables_dax
 from .utils import normalize_name
+import re
+
+def _extract_sql_from_m_expression(expr):
+    # Se for lista, junta em string
+    if isinstance(expr, list):
+        expr = "\n".join(expr)
+    # Substitui #(lf) por \n para facilitar leitura
+    expr = expr.replace('#(lf)', '\n')
+    # Busca Query=" ... "]) (pega tudo entre Query=" e "])
+    m = re.search(r'Query="(.*?)"\s*\]\)', expr, re.DOTALL)
+    if not m:
+        # Tenta aspas simples se não achou aspas duplas
+        m = re.search(r"Query='(.*?)'\s*\]\)", expr, re.DOTALL)
+    if m:
+        sql = m.group(1)
+        return sql.strip()
+    return None
 
 def render_medida_md(
     measure, nomeprojeto, tabela_nome, all_measures, all_tables, measures_reverse_map=None
@@ -71,14 +88,6 @@ def render_tabela_md(table, nomeprojeto, measures_using_table_map=None):
     out = []
     out.append(f"# {nome}")
     out.append("")
-    out.append("**Medidas que referenciam esta tabela:**")
-    if measures_ref:
-        for m in measures_ref:
-            ref = f"- [[{nomeprojeto}/medidas/{m}|{m}]]"
-            out.append(ref)
-    else:
-        out.append("- Nenhuma")
-    out.append("")
     
     # Medidas que utilizam
     out.append("**Medidas que utilizam esta tabela:**")
@@ -116,9 +125,15 @@ def render_tabela_md(table, nomeprojeto, measures_using_table_map=None):
             if isinstance(expr, list):
                 expr = "\n".join(expr)
             out.append(f"\tsource =\n{expr}")
-        out.append("")
-        out.append("annotation PBI_ResultType = Table")
-        out.append("```")
+            out.append("")
+            out.append("annotation PBI_ResultType = Table")
+            out.append("```")
+            # Extrai e exibe o SQL, se existir
+            sql = _extract_sql_from_m_expression(expr)
+            if sql:
+                out.append("\n#### SQL extraído do PowerQuery\n```sql")
+                out.append(sql)
+                out.append("```")
         out.append("")
 
     # Annotations

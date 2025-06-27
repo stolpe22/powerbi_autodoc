@@ -1,7 +1,5 @@
 import re
 
 def normalize_name(name):
-    # Troca * por x
-    name = name.replace("*", "x")
-    # Substitui qualquer caractere inválido e espaço por _
-    return re.sub(r'[<>:"/\\|? ]', '_', name)
+    """Normaliza nomes para arquivos: troca * por x e caracteres inválidos por _."""
+    return re.sub(r'[<>:"/\\|? ]', '_', name.replace("*", "x"))
