@@ -62,7 +62,7 @@ def render_medida_md(
     else:
         out.append("- Nenhuma")
     out.append("---")
-    out.append(f"- #{normalize_name(nomeprojeto).replace(".","_")}")
+    out.append(f"- #{normalize_name(nomeprojeto).replace(".","_")} #datamodel")
     return "\n".join(out)
 
 #Renderizador Tabela
@@ -161,6 +161,6 @@ def render_rls_md(roles, nomeprojeto):
             for ann in role["annotations"]:
                 output.append(f"- **{ann.get('name','')}:** {ann.get('value','')}")
         output.append("\n---\n")
-    output.append(f"---\n#{normalize_name(nomeprojeto).replace(".","_")}")
+    output.append(f"---\n#{normalize_name(nomeprojeto).replace(".","_")} #datamodel")
 
     return "\n".join(output)
