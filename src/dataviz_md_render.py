@@ -96,6 +96,20 @@ def render_section_md(section, visuals_info, nomeprojeto, visual_file_names):
     display_name = section.get("displayName", "Sem Nome")
     section_file_name = normalize_name(display_name) # sem .md para wikilink
     out = [f"# {display_name}", ""]
+    out.append("## Visuais nesta página")
+    if visuals_info:
+        for vis in visuals_info:
+            vis_id = vis['id']
+            vis_type = vis.get('visual_type', 'unnamed')
+            nome_literal = vis.get("visual_nomeliteral") or vis.get("visual_name") or "unnamed"
+            wikilink = visual_file_names.get(vis_id, "arquivo_nao_encontrado.md").replace('.md', '')
+            wikilink_full = f"[[{nomeprojeto}/dataviz/visualcontainers/{wikilink}|{nome_literal}]]"
+            out.append(
+                f"- {wikilink_full} (**ID:** `{vis_id}`) - {vis_type}"
+            )
+    else:
+        out.append("Nenhum visual encontrado nesta seção.")
+    out.append("")
 
     filters = section.get("filters", None)
     if filters:
@@ -125,21 +139,6 @@ def render_section_md(section, visuals_info, nomeprojeto, visual_file_names):
             out.append("```")
             out.append("")
 
-    out.append("## Visuais nesta página")
-    if visuals_info:
-        for vis in visuals_info:
-            vis_id = vis['id']
-            vis_type = vis.get('visual_type', 'unnamed')
-            vis_type_bonito = vis_type.title() if vis_type else "unnamed"
-            nome_literal = vis.get("visual_nomeliteral") or vis.get("visual_name") or "unnamed"
-            wikilink = visual_file_names.get(vis_id, "arquivo_nao_encontrado.md").replace('.md', '')
-            wikilink_full = f"[[{nomeprojeto}/dataviz/visualcontainers/{wikilink}|{nome_literal}]]"
-            out.append(
-                f"- {wikilink_full} (**ID:** `{vis_id}`)"
-            )
-    else:
-        out.append("Nenhum visual encontrado nesta seção.")
-    out.append("")
     out.append("---")
     out.append(f"#{normalize_name(nomeprojeto)} #dataviz")
     return "\n".join(out)
@@ -147,15 +146,13 @@ def render_section_md(section, visuals_info, nomeprojeto, visual_file_names):
 def render_visualcontainer_md(vis_info, section_display_name, section_file_name, nomeprojeto):
     vis_id = vis_info.get("id", "sem_id")
     vis_type = vis_info.get('visual_type', 'unnamed')
-    vis_type_bonito = vis_type.title() if vis_type else "unnamed"
     vis_name = vis_info.get('visual_name', '')
-    nome_literal = vis_info.get('visual_nomeliteral', '') or vis_name or "unnamed"
     vis_md = []
     vis_md.append(f"# Visual ID: `{vis_id}`")
     vis_md.append(f"- **Tipo:** `{vis_type}`")
     vis_md.append(f"- **Nome:** `{vis_name}`")
     vis_md.append(f"- **Nome literal:** `{vis_info.get('visual_nomeliteral', '')}`")
-    section_wikilink = f"[[autodoc/{normalize_name(nomeprojeto)}/dataviz/sections/{section_file_name}|Section: {section_display_name}]]"
+    section_wikilink = f"[[{nomeprojeto}/dataviz/sections/{section_file_name}|{section_display_name}]]"
     vis_md.append(f"- **Section:** {section_wikilink}")
     vis_md.append(f"- **Posição:** x={vis_info.get('x')} y={vis_info.get('y')}")
     vis_md.append(f"- **Tamanho:** w={vis_info.get('width')} h={vis_info.get('height')}")
