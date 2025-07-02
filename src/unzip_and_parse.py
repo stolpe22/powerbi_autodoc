@@ -9,6 +9,7 @@ from .extractors import (
     build_measures_reverse_map,
     build_measures_using_table_map,
     extract_measures_and_tables_dax,
+    build_relationships_by_table
 )
 from .utils import normalize_name
 
@@ -45,7 +46,8 @@ def _salvar_documentacao(data, nomeprojeto, autodoc_dir):
     os.makedirs(medidas_path, exist_ok=True)
 
     tables = data.get("model", {}).get("tables", [])
-    roles = data.get("model", {}).get("roles")
+    roles = data.get("model", {}).get("roles", [])
+    relationships = data.get("model", {}).get("relationships", [])
     all_tables = extract_all_table_names(tables)
     all_measures = extract_all_measure_names(tables)
     measures_reverse_map = build_measures_reverse_map(
@@ -54,9 +56,10 @@ def _salvar_documentacao(data, nomeprojeto, autodoc_dir):
     measures_using_table_map = build_measures_using_table_map(
         tables, all_measures, all_tables, extract_measures_and_tables_dax
     )
+    relationships_by_table = build_relationships_by_table(relationships)
 
     for table in tables:
-        md = render_tabela_md(table, nomeprojeto, measures_using_table_map)
+        md = render_tabela_md(table, nomeprojeto, measures_using_table_map, relationships_by_table)
         tname = normalize_name(table.get("name", "tabela_sem_nome"))
         with open(os.path.join(tabelas_path, f"{tname}.md"), "w", encoding="utf-8") as fout:
             fout.write(md)

@@ -99,3 +99,21 @@ def extract_sql_from_m_expression(expr):
         sql = '\n'.join(line.rstrip() for line in sql.splitlines())
         return sql
     return None
+
+def build_relationships_by_table(relationships):
+    """Retorna um dicionário {nome_tabela: [relacionamentos]} com os relacionamentos de cada tabela."""
+    rels_by_table = {}
+    for rel in relationships or []:
+        from_table = rel.get("fromTable")
+        from_cardinality = rel.get("fromCardinality")
+        to_table = rel.get("toTable")
+        to_cardinality = rel.get("toCardinality")
+        if from_table:
+            rels_by_table.setdefault(from_table, []).append(rel)
+        if from_cardinality:
+            rels_by_table.setdefault(from_cardinality, []).append(rel)
+        if to_table:
+            rels_by_table.setdefault(to_table, []).append(rel)
+        if to_cardinality:
+            rels_by_table.setdefault(to_cardinality, []).append(rel)
+    return rels_by_table

@@ -66,11 +66,39 @@ def render_medida_md(
     return "\n".join(out)
 
 #Renderizador Tabela
-def render_tabela_md(table, nomeprojeto, measures_using_table_map=None):
+def render_tabela_md(table, nomeprojeto, measures_using_table_map=None, relationships_by_table=None):
     nome = table.get("name", "Tabela sem nome")
     out = []
     out.append(f"# {nome}")
     out.append("")
+    
+     # Relacionamentos
+    if relationships_by_table:
+        rels = relationships_by_table.get(nome, [])
+        if rels:
+            out.append("## Relacionamentos Power BI")
+            for rel in rels:
+                from_table = rel.get("fromTable", "")
+                from_column = rel.get("fromColumn", "")
+                from_cardinality = rel.get("fromCardinality", "")
+                to_table = rel.get("toTable", "")
+                to_column = rel.get("toColumn", "")
+                to_cardinality = rel.get("toCardinality", "")
+                # Formata o sentido do relacionamento
+                if from_table == nome:
+                    # Esta tabela é origem
+                    out.append(f"- De: Esta tabela (**{from_table}**) [[#({from_column})]]\n")
+                    out.append(f"- Para: [[{nomeprojeto}/tabelas/{normalize_name(to_table)}#({to_column})|{to_table}]] [{to_column}]\n")
+                    if to_cardinality:
+                        out.append(f"- Cardinalidade from {from_cardinality} to **{to_cardinality}**")
+                elif to_table == nome:
+                    # Esta tabela é destino
+                    out.append(f"- De: [[{nomeprojeto}/tabelas/{normalize_name(from_table)}#({from_column})|{from_table}]] [{from_column}]\n")
+                    out.append(f"- Para: Esta tabela (**{to_table}**) [[#({to_column})]]\n")
+                    if to_cardinality:
+                        out.append(f"- Cardinalidade from {from_cardinality} to **{to_cardinality}**")
+                out.append("---")
+            out.append("")
     
     # Medidas que utilizam
     out.append("**Medidas que utilizam esta tabela:**")
