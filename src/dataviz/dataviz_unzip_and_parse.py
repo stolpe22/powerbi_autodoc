@@ -9,7 +9,7 @@ from .dataviz_extractors import (
     extract_visual_properties,
 )
 from .dataviz_md_render import render_section_md, render_visualcontainer_md
-from .utils import normalize_name
+from ..utils import normalize_name
 
 def dataviz_process_all_zips(projetos_dir, autodoc_dir):
     for fname in os.listdir(projetos_dir):
@@ -44,14 +44,6 @@ def _dataviz_load_layout_from_zip(zip_path):
             return layout
 
 def _dataviz_salvar_documentacao(layout, nomeprojeto, autodoc_dir):
-    from .dataviz_extractors import (
-        extract_sections_from_layout,
-        extract_section_display_name,
-        extract_visuals_from_section,
-        extract_visual_properties,
-    )
-    from .dataviz_md_render import render_section_md, render_visualcontainer_md
-    from .utils import normalize_name
 
     sections_path = os.path.join(autodoc_dir, nomeprojeto, "dataviz", "sections")
     os.makedirs(sections_path, exist_ok=True)

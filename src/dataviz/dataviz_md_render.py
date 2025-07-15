@@ -1,6 +1,6 @@
 import json
 from collections import defaultdict
-from .utils import normalize_name  # ajuste o import se necessário
+from ..utils import normalize_name  # ajuste o import se necessário
 
 def _describe_literal(value):
     # Remove aspas simples e null do Power BI
