@@ -10,7 +10,7 @@ from .extractors import (
     build_relationships_by_table
 )
 from .measure_md_renderer import MedidaMDRenderer
-from .table_me_renderer import TabelaMDRenderer
+from .table_md_renderer import TabelaMDRenderer
 from .rls_md_renderer import RLSMDRenderer
 from ..utils import normalize_name
 

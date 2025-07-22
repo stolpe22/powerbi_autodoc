@@ -1,4 +1,6 @@
 import re
+from ..configs.mquery_functions_structure import MQUERY_FUNCTIONS
+
 
 def extract_all_table_names(tables):
     """Retorna um set com os nomes de todas as tabelas do modelo."""
@@ -99,6 +101,38 @@ def extract_sql_from_m_expression(expr):
         sql = '\n'.join(line.rstrip() for line in sql.splitlines())
         return sql
     return None
+
+def extract_m_steps(m_code):
+    steps = []
+    lines = m_code.splitlines()
+    for line in lines:
+        line_strip = line.strip()
+        for func in MQUERY_FUNCTIONS:
+            fname = func["function"]
+            # Busca padrão: nome_da_etapa = NomeDaFuncao(
+            # Aceita aspas duplas ou simples no nome da etapa
+            regex = rf'(#?\"?[^\"]*\"?)\s*=\s*{re.escape(fname)}\((.*)\)'
+            m = re.match(regex, line_strip)
+            if m:
+                etapa_nome = m.group(1).strip()
+                params_str = m.group(2)
+                params = [p.strip() for p in re.split(r",(?![^\[]*\])", params_str)]
+                step_info = {
+                    "function": fname,
+                    "label": func.get("label", fname),
+                    "etapa_nome": etapa_nome,
+                    "params": []
+                }
+                for pdef in func["params"]:
+                    ppos = pdef["pos"]
+                    pname = pdef["name"]
+                    value = params[ppos] if len(params) > ppos else None
+                    step_info["params"].append({
+                        "name": pname,
+                        "value": value
+                    })
+                steps.append(step_info)
+    return steps
 
 def build_relationships_by_table(relationships):
     """Retorna um dicionário {nome_tabela: [relacionamentos]} com os relacionamentos de cada tabela."""

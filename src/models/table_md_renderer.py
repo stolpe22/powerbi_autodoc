@@ -1,5 +1,5 @@
 from .base_md_renderer import BaseMDRenderer
-from .extractors import extract_sql_from_m_expression
+from .extractors import (extract_sql_from_m_expression, extract_m_steps)
 from ..utils import normalize_name
 
 class TabelaMDRenderer(BaseMDRenderer):
@@ -89,6 +89,15 @@ class TabelaMDRenderer(BaseMDRenderer):
                     out.append("\n#### SQL extraído do PowerQuery\n```sql")
                     out.append(sql)
                     out.append("```")
+                # Extrai as etapas Power Query
+                steps = extract_m_steps(expr)
+                if steps:
+                    out.append("\n#### Etapas M extraídas do PowerQuery")
+                    for step in steps:
+                        out.append(f"- **{step['label']}**")
+                        for param in step["params"]:
+                            out.append(f"  - {param['name']}: {param['value']}")
+                        out.append("")
             else:
                 # Para calculated, etc: apenas mostra a expressão e fecha bloco
                 out.append(f"\tsource =\n{expr}")
