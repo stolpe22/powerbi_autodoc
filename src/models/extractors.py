@@ -1,4 +1,5 @@
 import re
+from ..utils import (split_params)
 from ..configs.mquery_functions_structure import MQUERY_FUNCTIONS
 
 
@@ -109,14 +110,13 @@ def extract_m_steps(m_code):
         line_strip = line.strip()
         for func in MQUERY_FUNCTIONS:
             fname = func["function"]
-            # Busca padrão: nome_da_etapa = NomeDaFuncao(
-            # Aceita aspas duplas ou simples no nome da etapa
             regex = rf'(#?\"?[^\"]*\"?)\s*=\s*{re.escape(fname)}\((.*)\)'
             m = re.match(regex, line_strip)
             if m:
                 etapa_nome = m.group(1).strip()
-                params_str = m.group(2)
-                params = [p.strip() for p in re.split(r",(?![^\[]*\])", params_str)]
+                params_str = m.group(2).strip()
+                # Use split_params para todas as funções
+                params = split_params(params_str)
                 step_info = {
                     "function": fname,
                     "label": func.get("label", fname),

@@ -1,6 +1,38 @@
 # Lista de funções M relevantes para documentação
 MQUERY_FUNCTIONS = [
     {
+        "function": "SharePoint.Files",
+        "label": "Carregar arquivos do SharePoint",
+        "params": [
+            {"name": "URL do SharePoint", "pos": 0},
+            {"name": "Opções", "pos": 1, "optional": True}
+        ]
+    },
+    {
+        "function": "Table.SelectRows",
+        "label": "Selecionar Linhas",
+        "params": [
+            {"name": "Etapa", "pos": 0},
+            {"name": "Condição", "pos": 1}
+        ]
+    },
+    {
+        "function": "Excel.Workbook",
+        "label": "Importar do Excel",
+        "params": [
+            {"name": "Arquivo Excel", "pos": 0},
+            {"name": "Opções", "pos": 1, "optional": True}
+        ]
+    },
+    {
+        "function": "Table.PromoteHeaders",
+        "label": "Promover cabeçalhos",
+        "params": [
+            {"name": "Tabela", "pos": 0},
+            {"name": "Opções", "pos": 1, "optional": True}
+        ]
+    },
+    {
         "function": "Table.NestedJoin",
         "label": "Join",
         "params": [
@@ -26,7 +58,7 @@ MQUERY_FUNCTIONS = [
         "function": "Table.RenameColumns",
         "label": "Renomear Colunas",
         "params": [
-            {"name": "Tabela", "pos": 0},
+            {"name": "Etapa", "pos": 0},
             {"name": "Renomeações", "pos": 1}
         ]
     },
@@ -56,11 +88,20 @@ MQUERY_FUNCTIONS = [
         ]
     },
     {
-      "function": "Table.Distinct",
-      "label": "Aplicar Distinct",
-      "params": [
-          {"name": "Etapa", "pos": 0}
-      ]  
+        "function": "Table.Distinct",
+        "label": "Aplicar Distinct",
+        "params": [
+            {"name": "Registro", "pos": 0}
+        ]
     },
+    {
+        "function": "Table.DuplicateColumn",
+        "label": "Duplicar Coluna",
+        "params": [
+            {"name": "Etapa", "pos": 0},
+            {"name": "Coluna Original", "pos": 1},
+            {"name": "Coluna Duplicada", "pos": 2}
+        ]
+    }
     # Adicione outras funções conforme necessário!
 ]
