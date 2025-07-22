@@ -63,15 +63,6 @@ MQUERY_FUNCTIONS = [
         ]
     },
     {
-        "function": "Table.AddColumn",
-        "label": "Adicionar Coluna",
-        "params": [
-            {"name": "Tabela", "pos": 0},
-            {"name": "Nome Nova Coluna", "pos": 1},
-            {"name": "Função", "pos": 2}
-        ]
-    },
-    {
         "function": "Table.RemoveColumns",
         "label": "Remover Colunas",
         "params": [
@@ -102,6 +93,64 @@ MQUERY_FUNCTIONS = [
             {"name": "Coluna Original", "pos": 1},
             {"name": "Coluna Duplicada", "pos": 2}
         ]
+    },
+    {
+    "function": "Table.ReplaceValue",
+    "label": "Substituir Valor",
+    "params": [
+        {"name": "Tabela", "pos": 0},
+        {"name": "Valor a ser substituído", "pos": 1},
+        {"name": "Novo valor", "pos": 2},
+        {"name": "Função de substituição", "pos": 3},
+        {"name": "Colunas para buscar", "pos": 4}
+        ]
+    },
+    {
+    "function": "Table.Sort",
+    "label": "Ordenar Tabela",
+    "params": [
+        {"name": "Tabela", "pos": 0},
+        {"name": "Critério de Ordenação", "pos": 1}
+    ]
+    },
+    {
+        "function": "Table.AddColumn",
+        "label": "Adicionar Coluna",
+        "params": [
+            {"name": "Tabela", "pos": 0},
+            {"name": "Nome Nova Coluna", "pos": 1},
+            {"name": "Função Geradora da Coluna", "pos": 2},
+            {"name": "Tipo da Coluna", "pos": 3, "optional": True}
+        ]
+    },
+    {
+        "function": "Table.RemoveColumns",
+        "label": "Remover Colunas",
+        "params": [
+            {"name": "Tabela", "pos": 0},
+            {"name": "Colunas Removidas", "pos": 1},
+            {"name": "Campo ausente", "pos": 2, "optional": True}
+        ]
+    },
+    {
+        "function": "Table.ExpandRecordColumn",
+        "label": "Expandir Coluna de Registro",
+        "params": [
+            {"name": "Tabela", "pos": 0},
+            {"name": "Nome da Coluna", "pos": 1},
+            {"name": "Lista de Campos", "pos": 2},
+            {"name": "Novos Nomes das Colunas", "pos": 3, "optional": True}
+        ]
+    },
+    {
+        "function": "Table.ReorderColumns",
+        "label": "Reordenar Colunas",
+        "params": [
+            {"name": "Tabela", "pos": 0},
+            {"name": "Ordem das Colunas", "pos": 1},
+            {"name": "Campo ausente", "pos": 2, "optional": True}
+        ]
     }
+     
     # Adicione outras funções conforme necessário!
 ]
