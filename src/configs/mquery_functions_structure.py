@@ -150,7 +150,30 @@ MQUERY_FUNCTIONS = [
             {"name": "Ordem das Colunas", "pos": 1},
             {"name": "Campo ausente", "pos": 2, "optional": True}
         ]
-    }
-     
+    },
+    {
+        "function": "Table.FromRows",
+        "label": "Criar Tabela a partir de Linhas",
+        "params": [
+            {"name": "Linhas", "pos": 0},
+            {"name": "Colunas", "pos": 1, "optional": True}
+        ]
+    },
+    {
+        "function": "SharePoint.Tables",
+        "label": "Obter Tabelas do SharePoint",
+        "params": [
+            {"name": "URL do Site", "pos": 0},
+            {"name": "Opções", "pos": 1, "optional": True}
+        ]
+    },
+    {
+        "function": "Table.Combine",
+        "label": "Combinar Tabelas",
+        "params": [
+            {"name": "Tabelas", "pos": 0},
+            {"name": "Colunas", "pos": 1, "optional": True}
+        ]
+    }     
     # Adicione outras funções conforme necessário!
 ]
