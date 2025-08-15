@@ -1,7 +1,5 @@
 # POWERBI_AUTODOC
 
-![Estrutura de diretórios](image1)
-
 ## Descrição
 
 **POWERBI_AUTODOC** é uma solução automatizada para documentação de projetos Power BI, gerando arquivos Markdown (.md) detalhados sobre tabelas, medidas, relacionamentos, regras de RLS e resumo do modelo. O projeto processa arquivos ZIP exportados do Power BI, descompacta e interpreta o schema do modelo, extraindo informações relevantes para facilitar auditoria, governança e compartilhamento de conhecimento.
