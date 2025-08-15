@@ -2,7 +2,7 @@
 
 ## Descrição
 
-**POWERBI_AUTODOC** é uma solução automatizada para documentação de projetos Power BI, gerando arquivos Markdown (.md) detalhados sobre tabelas, medidas, relacionamentos, regras de RLS e resumo do modelo. O projeto processa arquivos ZIP exportados do Power BI, descompacta e interpreta o schema do modelo, extraindo informações relevantes para facilitar auditoria, governança e compartilhamento de conhecimento.
+**POWERBI_AUTODOC** é uma solução automatizada para documentação de projetos Power BI, gerando arquivos Markdown (.md) detalhados sobre tabelas, medidas, relacionamentos, regras de RLS e resumo do modelo. O projeto processa arquivos ZIP (extensão .pbit, do Power BI, renomeados para .zip) exportados do Power BI, descompacta e interpreta o schema do modelo, extraindo informações relevantes para facilitar auditoria, governança e compartilhamento de conhecimento.
 
 > **A documentação gerada é otimizada para navegação no [Obsidian](https://obsidian.md), aproveitando links internos e estrutura de arquivos para a criação de knowledge graphs.**  
 > Links cruzados entre tabelas, medidas e RLS favorecem explorações contextuais e relacionamentos visuais no Obsidian.
