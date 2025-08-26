@@ -76,6 +76,8 @@ autodoc/
 projetos/
 !projetos/.gitkeep
 
+autodoc_eof
+
 # Local environment
 .env
 .venv

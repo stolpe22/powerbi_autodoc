@@ -16,23 +16,25 @@ def extract_measures_and_tables_dax(dax, all_measures, all_tables):
     Extrai listas de medidas e tabelas referenciadas em uma expressão DAX.
     Não faz mais limpeza de comentários ou tags HTML, pois assume que a entrada já está filtrada.
     """
-    import re
     measures_set = set()
     tables_set = set()
 
-    # Tabelas do tipo: 'Tabela Com Espaço'[Coluna]
-    for match in re.finditer(r"'([^']+)'\s*\[", dax):
-        tables_set.add(match.group(1))
+    # Tabelas do tipo: 'Tabela Com Espaço'[Coluna] ou TabelaX[Coluna]
+    for match in re.finditer(r"(?:'([^']+)'|([a-zA-Z0-9_]+))\s*\[", dax):
+        tname = match.group(1) or match.group(2)
+        if tname:
+            tables_set.add(tname)
 
     # Medidas: [entre colchetes] não precedidos de Tabela[
     for match in re.finditer(r"\[([^\[\]]+)\]", dax):
         nome_no_colchete = match.group(1)
         before = dax[:match.start()]
-        import re as _re
-        tabela_match = _re.search(r"(\b[\w\s]+)\s*$", before)
-        is_table = tabela_match and tabela_match.group(1).strip() in all_tables
+        # Verifica se antes tem tabela (com ou sem aspas)
+        tabela_match = re.search(r"(?:'([^']+)'|([a-zA-Z0-9_]+))\s*$", before)
+        is_table = tabela_match and (tabela_match.group(1) or tabela_match.group(2)) in all_tables
         if not is_table and nome_no_colchete in all_measures:
             measures_set.add(nome_no_colchete)
+
     return sorted(measures_set), sorted(tables_set)
 
 def build_measures_reverse_map(tables, all_measures, all_tables, extract_func):
